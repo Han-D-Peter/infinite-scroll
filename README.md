@@ -1,40 +1,24 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. api
+   - offset query
+     - offset은 음수를 가질 수 없음
+     - offset은 최대 데이터 길이를 넘길 수 없음
+   - step query
+     - step은 0과 같거나 커야함
+     - `offset * step` ~ `offset * (step + 1)` 만큼의 데이터를 가져옴
+2. page
+   - 기본 50개를 가져와 보여주는 상태에서 시작
+     - getStaticProps를 통해 offset=50 step=0의 데이터를 미리 가져와 static 파일로 만들어 둠
+     - products에 데이터들을 담아서 넘겨줌
+     - dataLength에 몇개 데이터를 담았는지 넘겨줌
+   - 50개 중 사용자 설정에 따른 포인트(화면의 몇퍼센트가 스크롤되는지에 따라?)가 화면에 노출되면 추가 데이터 요청
+     - 데이터 관련 기능 설명
+       - 데이터를 들고 있는 상태 필요
+       - 추가 데이터를 요청할 함수를 가짐
+       - 추가 데이터를 요청할때마다 step이 +1 되어 요청
+       - offset 기본값을 설정 가능함
+       - 로딩중임을 알려주는 플래그 필요
+     - 화면 무한 스크롤 관련 처리
+       - threshhold를 통해 화면의 몇퍼센트를 지나고 있는지를 설정 가능(사용자 설정에 따라 한스텝 정도 prefetch 해 두는것도 나쁘지 않을듯?)
+       - 현재 데이터 길이(DOM으로 만들어진 아이템들 갯수)로 threshold를 작용할 children을 선별 가능
+       - 트리거 함수를 넣을 수 있도록
+       - children을 감싸고 잇는 list 컴포넌트에 넣을 ref
