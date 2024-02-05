@@ -332,5 +332,7 @@ export default function handler(
   if (!Number(step) && Number(step) !== 0) {
     return res.status(400).json({ status: "step은 숫자형태로 와야 합니다." });
   }
-  res.status(200).json(mockResponseData());
+  setTimeout(() => {
+    res.status(200).json(mockResponseData());
+  }, 2000);
 }

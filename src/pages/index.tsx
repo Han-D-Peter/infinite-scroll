@@ -4,6 +4,7 @@ import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import useInfiniteQuery from "@/hooks/useInfiniteQuery";
 import getProducts from "@/api/getProducts";
 import Card from "@/component/Card";
+import { useMemo } from "react";
 
 export default function Home({
   products,
@@ -21,6 +22,17 @@ export default function Home({
 
     trigger: loadMore,
   });
+
+  const skeleton = useMemo(() => {
+    return Array.from({ length: products.length }, (_, index) => (
+      <Card
+        key={index}
+        title="Loading..."
+        genre="Loading..."
+        description="Loading..."
+      />
+    ));
+  }, []);
 
   return (
     <main>
@@ -44,6 +56,7 @@ export default function Home({
             />
           );
         })}
+        {isLoading && skeleton}
       </section>
     </main>
   );
