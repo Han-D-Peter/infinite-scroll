@@ -15,8 +15,9 @@ export default function Home({
   });
 
   const infiniteContainerRef = useInfiniteScroll<HTMLDivElement>({
-    threshHold: [0.7],
+    threshHold: 0.8,
     dataLength: data.length,
+
     trigger: loadMore,
   });
 
