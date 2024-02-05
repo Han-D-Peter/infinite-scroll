@@ -3,6 +3,7 @@ import { Product } from "./api/products";
 import useInfiniteScroll from "@/hooks/useInfiniteScroll";
 import useInfiniteQuery from "@/hooks/useInfiniteQuery";
 import getProducts from "@/api/getProducts";
+import Card from "@/component/Card";
 
 export default function Home({
   products,
@@ -35,24 +36,12 @@ export default function Home({
         {data.map((item) => {
           const { id, title, genre, description } = item;
           return (
-            <div
+            <Card
               key={id}
-              style={{
-                borderRadius: "5px",
-                border: "1px solid black",
-              }}
-            >
-              <div
-                style={{
-                  width: "100%",
-                  height: "300px",
-                  backgroundColor: "skyblue",
-                }}
-              ></div>
-              <div>{title}</div>
-              <div>{genre}</div>
-              <div>{description}</div>
-            </div>
+              title={title}
+              genre={genre}
+              description={description}
+            />
           );
         })}
       </section>
