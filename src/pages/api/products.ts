@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
-const mockResponseData = [
+const mockResponseData = () => [
   {
     id: randomUUID(),
     title: "Ratcatcher",
@@ -308,7 +308,12 @@ const mockResponseData = [
 import { randomUUID } from "crypto";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-export type Product = { id: string; title: string; description: string };
+export type Product = {
+  id: string;
+  title: string;
+  description: string;
+  genre: string;
+};
 
 export default function handler(
   req: NextApiRequest,
@@ -319,7 +324,7 @@ export default function handler(
     return res.status(400).json({ status: "offset은 숫자형태로 와야 합니다." });
   }
 
-  if (Number(offset) > mockResponseData.length) {
+  if (Number(offset) > mockResponseData().length) {
     return res
       .status(400)
       .json({ status: "offset이 데이터 전체 길이를 초과합니다." });
@@ -327,5 +332,5 @@ export default function handler(
   if (!Number(step) && Number(step) !== 0) {
     return res.status(400).json({ status: "step은 숫자형태로 와야 합니다." });
   }
-  res.status(200).json(mockResponseData);
+  res.status(200).json(mockResponseData());
 }

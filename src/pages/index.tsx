@@ -14,11 +14,47 @@ export default function Home({
     startStep: 1,
   });
 
-  console.log("data", data);
+  const infiniteContainerRef = useInfiniteScroll<HTMLDivElement>({
+    threshHold: [0.7],
+    dataLength: data.length,
+    trigger: loadMore,
+  });
+
   return (
     <main>
-      <button onClick={loadMore}>add</button>
-      <div>hello</div>
+      <section
+        ref={infiniteContainerRef}
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          padding: "200px",
+          gap: "40px",
+        }}
+      >
+        {data.map((item) => {
+          const { id, title, genre, description } = item;
+          return (
+            <div
+              key={id}
+              style={{
+                borderRadius: "5px",
+                border: "1px solid black",
+              }}
+            >
+              <div
+                style={{
+                  width: "100%",
+                  height: "300px",
+                  backgroundColor: "skyblue",
+                }}
+              ></div>
+              <div>{title}</div>
+              <div>{genre}</div>
+              <div>{description}</div>
+            </div>
+          );
+        })}
+      </section>
     </main>
   );
 }
