@@ -10,11 +10,14 @@ export default function Home({
   const { data, loadMore, isLoading } = useInfiniteQuery<Product>({
     queryFn: getProducts,
     initialData: products,
-    offset: 50,
+    offset: products.length,
     startStep: 1,
   });
+
+  console.log("data", data);
   return (
     <main>
+      <button onClick={loadMore}>add</button>
       <div>hello</div>
     </main>
   );

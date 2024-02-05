@@ -8,7 +8,7 @@ interface useInfiniteQueryResult<T> {
 }
 
 interface useInfiniteQueryArgs<T> {
-  queryFn: () => Promise<any>;
+  queryFn: (offset: number, step: number) => Promise<any>;
   initialData?: T[];
   offset: number;
   startStep?: number;
@@ -20,19 +20,26 @@ function useInfiniteQuery<T>(
 
 function useInfiniteQuery<T>({
   queryFn,
-  initialData,
+  initialData = [],
   offset,
   startStep = 0,
 }: useInfiniteQueryArgs<T>): useInfiniteQueryResult<T> {
-  const [data, setData] = useState<T[]>([]);
+  const [data, setData] = useState<T[]>(initialData);
+  const [isLoading, setIsLoading] = useState(true);
+  const [currentStep, setCurrentStep] = useState(startStep);
 
-  async function getData() {
-    const res = await queryFn();
-    const jsonifiedResponse: T[] = await res.json();
-    setData(jsonifiedResponse);
+  async function loadMore() {
+    setIsLoading(false);
+    const jsonifiedResponse: T[] = await queryFn(offset, currentStep)
+      .then((res) => res)
+      .finally(() => {
+        setIsLoading(false);
+        setCurrentStep((prev) => prev++);
+      });
+    setData((prev) => [...prev, ...jsonifiedResponse]);
   }
 
-  return { data, isLoading: true, loadMore: () => {} };
+  return { data, isLoading, loadMore };
 }
 
 export default useInfiniteQuery;
